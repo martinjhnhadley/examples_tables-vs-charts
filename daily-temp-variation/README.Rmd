@@ -1,0 +1,153 @@
+---
+output:
+  html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+library("tidyverse")
+library("DT")
+library("knitr")
+library("hrbrthemes")
+library("leaflet")
+library("highcharter")
+```
+
+
+# Introducing our dataset
+
+The Met Office makes available historical weather data for 25+ sites from 1870 onwards at this website: http://www.metoffice.gov.uk/public/weather/climate-historic/#?tab=climateHistoric
+
+Data looks as follows:
+
+```{r}
+tibble(
+      yyyy = c(1873, 1873),
+      mm = c(7, 8),
+      tmax = c(16.7, 15.5),
+      tmin = c(9.9, 8.9),
+      af = c(0, 0),
+      rain = c(110.5, 141),
+      sun = c(NA, NA),
+      location = c("stornoway", "stornoway")
+    )
+```
+
+There's data for at least 50 years for a total of 25 different locations through the United Kingdom.
+
+It's somewhat interesting to pose the following question of the data:
+
+> What's the average temperature difference between the maximal and minimal temperature recorded in each month, for each location?
+
+Let's compare three different approaches to presenting this data:
+
+- Tables
+- Static `ggplot` chart
+- Interactive chart and map of points
+
+# Tables Only
+
+Data was collected from 25 different locations in the United Kingdom, labelled according to region (England, Northern Ireland, Scotland, Wales), from 1873 to today using the Met Offices climatic history explorer. Mean temperature ranges per month were calculated for each region
+
+Mean maximum daily temperature ranges were observed to hit a maximumal value in May, afterwards in all locations except England the temperature range dropped significantly. In England, however, the temperature range remained almost static for 3 months following the peakin May, see the table below for details
+
+```{r}
+weather_station_locations <- read_csv("data/locations.csv")
+
+region_colours <- tibble(
+  region = c("England", "Wales", "Northern Ireland", "Scotland"),
+  color = c("#1b9e77", "#d95f02", "#7570b3", "#66a61e")
+)
+
+weather_station_locations <- weather_station_locations %>%
+  left_join(region_colours)
+
+load("data/british_weather.rdata")
+british_weather %>%
+  mutate(tdiff = tmax - tmin) %>%
+  group_by(region, mm) %>%
+  dplyr::summarise(average.tdiff = mean(tdiff, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(average.tdiff = round(average.tdiff, 1)) %>%
+  spread(mm, average.tdiff) %>%
+  kable()
+```
+
+# Static `ggplot` chart
+
+Data was collected from 25 different locations in the United Kingdom, labelled according to region (England, Northern Ireland, Scotland, Wales), from 1873 to today using the Met Offices climatic history explorer. Mean temperature ranges per month were calculated for each region.
+
+Mean maximum daily temperature ranges were observed to hit a maximumal value in May, afterwards in all locations except England the temperature range dropped significantly. In England, however, the temperature range remained almost static for 3 months following the peakin May, see the chart below for details.
+
+```{r}
+british_weather %>%
+  mutate(tdiff = tmax - tmin) %>%
+  group_by(region, mm) %>%
+  dplyr::summarise(average.tdiff = mean(tdiff, na.rm = TRUE)) %>%
+  ggplot(aes(
+    x = mm,
+    y = average.tdiff,
+    group = region,
+    col = region
+  )) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Month", y = "Mean daily temperature difference") +
+  ggtitle("Mean daily temperature difference in the UK", subtitle = "Split by region") +
+  ggthemes::theme_hc() +
+  theme(panel.grid.major.x = element_line(color="grey", size = 0.5))
+```
+
+# Interactive chart and map of points
+
+Data was collected from 25 different locations in the United Kingdom, labelled according to region (England, Northern Ireland, Scotland, Wales), from 1873 to today using the Met Offices climatic history explorer.
+
+```{r}
+weather_station_locations %>%
+        leaflet() %>%
+        addTiles() %>%
+        addCircleMarkers(color = ~ color,  label = ~ location,
+                         opacity = 1,
+                         radius = 4,
+                         labelOptions = labelOptions(noHide = T)) %>%
+        addLegend(
+          colors = c("#1b9e77", "#d95f02", "#7570b3", "#66a61e"),
+          labels = c("England", "Wales", "Northern Ireland", "Scotland")
+        )
+```
+
+Mean maximum daily temperature ranges were observed to hit a maximumal value in May, afterwards in all locations except England the temperature range dropped significantly. In England, however, the temperature range remained almost static for 3 months following the peakin May, hover your cursor over the chart below for details:
+
+
+```{r}
+british_weather %>%
+  mutate(tdiff = tmax - tmin) %>%
+  group_by(region, mm) %>%
+  dplyr::summarise(average.tdiff = mean(tdiff, na.rm = TRUE)) %>%
+  hchart(
+    type = "line",
+    hcaes(
+      x = mm,
+      y = average.tdiff,
+      group = region,
+      col = region
+    )
+  ) %>%
+  hc_plotOptions(series = list(marker = list(enabled = TRUE))) %>%
+  hc_tooltip(
+    shared = TRUE,
+    valueDecimals = 2,
+    valueSuffix = "°C"
+  ) %>%
+  hc_xAxis(title = list(text = "Month")) %>%
+  hc_yAxis(title = list(text = "Mean daily temperature difference"))
+```
+
+
+

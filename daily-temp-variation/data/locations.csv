@@ -1,0 +1,26 @@
+location,lat,lng,region,seaside
+camborne,50.218,-5.327,England,TRUE
+hurn,50.779,-1.835,England,TRUE
+eastbourne,50.762,0.285,England,TRUE
+chivenor,51.089,-4.147,England,TRUE
+yeovilton,51.006,-2.641,England,FALSE
+manston,51.346,1.337,England,TRUE
+heathrow,51.479,-0.449,England,FALSE
+cardiff,51.488,-3.187,Wales,TRUE
+oxford,51.761,-1.262,England,FALSE
+aberporth,52.139,-4.57,Wales,TRUE
+cambridge,52.245,0.102,England,FALSE
+shawbury,52.794,-2.663,England,FALSE
+suttonbonington,52.833,-1.25,England,FALSE
+waddington,53.175,-0.522,England,FALSE
+durham,54.768,-1.585,England,FALSE
+newtonrigg,54.67,-2.786,England,FALSE
+armagh,54.352,-6.649,Northern Ireland,FALSE
+eskdalemuir,55.311,-3.206,Scotland,FALSE
+paisley,55.846,-4.43,Scotland,FALSE
+leuchars,56.377,-2.861,Scotland,TRUE
+dunstaffnage,56.451,-5.439,Scotland,TRUE
+tiree,56.5,-6.88,Scotland,TRUE
+wickairport,58.454,-3.088,Scotland,TRUE
+stornoway,58.214,-6.318,Scotland,TRUE
+ballypatrick,55.181,-6.153,Northern Ireland,TRUE

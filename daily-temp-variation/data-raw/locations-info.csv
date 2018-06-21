@@ -1,0 +1,26 @@
+location,region,seaside
+stornoway,Scotland,TRUE
+wickairport,Scotland,TRUE
+tiree,Scotland,TRUE
+dunstaffnage,Scotland,TRUE
+leuchars,Scotland,TRUE
+paisley,Scotland,FALSE
+eskdalemuir,Scotland,FALSE
+ballypatrick,Northern Ireland,TRUE
+armagh,Northern Ireland,FALSE
+newtonrigg,England,FALSE
+durham,England,FALSE
+waddington,England,FALSE
+suttonbonington,England,FALSE
+shawbury,England,FALSE
+cambridge,England,FALSE
+aberporth,Wales,TRUE
+oxford,England,FALSE
+cardiff,Wales,TRUE
+heathrow,England,FALSE
+manston,England,TRUE
+yeovilton,England,FALSE
+chivenor,England,TRUE
+eastbourne,England,TRUE
+hurn,England,TRUE
+camborne,England,TRUE
